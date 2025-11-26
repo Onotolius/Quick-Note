@@ -1,5 +1,7 @@
+// states
+
 const dialog = document.getElementById("noteDialog");
-const addNoteBtn = document.querySelector(".btn__add");
+const addNoteBtns = document.querySelectorAll(".btn__add");
 const themeBtn = document.querySelector(".btn__theme");
 const closeDialogBtn = document.querySelector(".btn__close");
 const noteTitle = document.getElementById("noteTitle");
@@ -8,52 +10,69 @@ const cancelBtn = document.querySelector(".btn__cancel");
 const saveNoteBtn = document.querySelector(".btn__save");
 const noteForm = document.getElementById("noteForm");
 const deleteBtn = document.querySelector("delete-btn");
-
+let currentEditingId = null;
 let notes = loadNotes();
 
-addNoteBtn.addEventListener("click", function () {
-  dialog.showModal(); // работает
-});
-closeDialogBtn.addEventListener("click", function () {
-  dialog.close();
-});
-cancelBtn.addEventListener("click", function () {
-  dialog.close();
-});
+// LocalStorage
 
-function saveNote(event) {
-  event.preventDefault();
-  const title = noteTitle.value.trim();
-  const content = noteContent.value.trim();
-  if (!title && !content) return;
-  notes.unshift({
-    id: Date.now().toString(),
-    title: title,
-    content: content,
-    createdAt: new Date().toLocaleDateString(),
-  });
-  saveNotes();
-  renderNotes();
+function toggleTheme() {
+  const isDark = document.body.classList.toggle("dark-theme");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  themeBtn.textContent = isDark ? "🌝" : "🌚";
+}
+function applyTheme() {
+  if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-theme");
+    themeBtn.textContent = "🌝";
+  }
+}
+
+function saveTheme() {
+  localStorage.setItem("theme", JSON.stringify());
+}
+
+function saveNotes() {
+  localStorage.setItem("quickNotes", JSON.stringify(notes));
+}
+function loadNotes() {
+  const savedNotes = localStorage.getItem("quickNotes");
+  return savedNotes ? JSON.parse(savedNotes) : [];
+}
+
+// UI Helpers
+function resetForm() {
   noteTitle.value = "";
   noteContent.value = "";
-  dialog.close();
-}
-function deleteNote(id) {
-  notes = notes.filter((note) => note.id !== id);
-  saveNotes();
-  renderNotes();
+  currentEditingId = null;
 }
 
-//render
+function openCreateDialog() {
+  resetForm();
+  dialog.showModal();
+}
+function openEditDialog(note) {
+  noteTitle.value = note.title;
+  noteContent.value = note.content;
+  currentEditingId = note.id;
+  dialog.showModal();
+}
+
+function editNote(id) {
+  const noteToEdit = notes.find((note) => note.id === id);
+  if (!noteToEdit) return;
+  openEditDialog(noteToEdit);
+}
 
 function renderNotes() {
   const notesContainer = document.getElementById("notesContainer");
   if (notes.length === 0) {
     notesContainer.innerHTML = `
+      <li class="notes__item notes__item--empty">
       <div class="empty-state">
               <h2>No notes yet</h2>
               <p>Create your first note to get started!<p>
               <button class="btn btn__add">Add Note</button>
+      </li>
             `;
     return;
   }
@@ -105,6 +124,7 @@ function renderNotes() {
               `,
     )
     .join("");
+
   const deleteButtons = notesContainer.querySelectorAll(".delete-btn");
   deleteButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -113,33 +133,70 @@ function renderNotes() {
       deleteNote(id);
     });
   });
+  const editButtons = notesContainer.querySelectorAll(".edit-btn");
+  editButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".notes__item");
+      const id = card.dataset.id;
+      editNote(id);
+    });
+  });
 }
+// Logic
+
+function saveNote(event) {
+  event.preventDefault();
+
+  const title = noteTitle.value.trim();
+  const content = noteContent.value.trim();
+  if (!title && !content) return;
+  if (currentEditingId === null) {
+    notes.unshift({
+      id: Date.now().toString(),
+      title,
+      content,
+      createdAt: new Date().toLocaleDateString(),
+    });
+  } else {
+    const currentIndex = notes.findIndex(
+      (note) => note.id === currentEditingId,
+    );
+    if (currentIndex !== -1) {
+      notes[currentIndex].title = title;
+      notes[currentIndex].content = content;
+    }
+    currentEditingId = null;
+  }
+  saveNotes();
+  renderNotes();
+  resetForm();
+  dialog.close();
+}
+function deleteNote(id) {
+  notes = notes.filter((note) => note.id !== id);
+  saveNotes();
+  renderNotes();
+}
+
+//Listeneres
+
+document.addEventListener("click", function (event) {
+  const addNoteBtn = event.target.closest(".btn__add");
+  if (!addNoteBtn) return;
+  openCreateDialog();
+});
+
+closeDialogBtn.addEventListener("click", function () {
+  resetForm();
+  dialog.close();
+});
+cancelBtn.addEventListener("click", function () {
+  resetForm();
+  dialog.close();
+});
 
 noteForm.addEventListener("submit", saveNote);
 
-function toggleTheme() {
-  const isDark = document.body.classList.toggle("dark-theme");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-  themeBtn.textContent = isDark ? "🌝" : "🌚";
-}
-function applyTheme() {
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-theme");
-    themeBtn.textContent = "🌝";
-  }
-}
-
-function saveTheme() {
-  localStorage.setItem("theme", JSON.stringify()); // пока не знаю
-}
-
-function saveNotes() {
-  localStorage.setItem("quickNotes", JSON.stringify(notes));
-}
-function loadNotes() {
-  const savedNotes = localStorage.getItem("quickNotes");
-  return savedNotes ? JSON.parse(savedNotes) : [];
-}
 document.addEventListener("DOMContentLoaded", function () {
   applyTheme();
   renderNotes();

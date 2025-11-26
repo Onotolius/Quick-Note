@@ -41,25 +41,30 @@ input,
 textarea {
   font: inherit;
 }
+
 .container {
   max-width: 1220px;
   padding: 0 10px;
   margin: 0 auto;
 }
+
 .header {
   margin-top: 1rem;
 }
+
 .header__inner {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   align-items: center;
 }
+
 .header__logo {
   font-size: 2em;
   font-weight: bold;
   color: var(--brand-color);
 }
+
 .btn {
   background: var(--brand-color);
   color: white;
@@ -70,16 +75,19 @@ textarea {
   font-weight: 500;
   transition: all 0.2s ease;
 }
+
 /*----------NOTES----------*/
 .notes {
   margin-top: 2em;
 }
+
 .notes__list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   /*grid-auto-flow: dense;*/
   gap: 1em;
 }
+
 .notes__item {
   background: var(--surface-color);
   border-radius: 0.75rem;
@@ -95,12 +103,19 @@ textarea {
   transform: scale(1.02);
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
 }
+
+.notes__item--empty {
+  grid-column: 1/-1;
+  justify-self: center;
+}
+
 .notes__time {
   font-style: italic;
   font-weight: 400;
   color: var(--secondary-text-color);
   margin-bottom: 0.5em;
 }
+
 .notes__title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -124,6 +139,7 @@ textarea {
   opacity: 1;
   transition: all 0.2s ease;
 }
+
 /*-----NOTE-btn--------*/
 .edit-btn,
 .delete-btn {
@@ -151,6 +167,7 @@ textarea {
   color: #ff5252;
   transform: scale(1.05);
 }
+
 /*--------DIALOG-----------*/
 dialog {
   margin: auto;
@@ -163,6 +180,7 @@ dialog {
   max-width: 500px;
   width: 90vw;
 }
+
 dialog::backdrop {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
@@ -182,6 +200,14 @@ dialog::backdrop {
 .dialog__title {
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.dialog__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5em;
+
 }
 
 .close-btn {
@@ -238,9 +264,11 @@ dialog::backdrop {
   gap: 1rem;
   justify-content: flex-end;
 }
+
 .btn__close {
   font-size: 1em;
 }
+
 .cancel-btn,
 .save-btn {
   padding: 0.75rem 1.5rem;
@@ -267,7 +295,6 @@ dialog::backdrop {
 
 .empty-state {
   text-align: center;
-  width: 80%;
   padding: 4rem 2rem;
   color: var(--secondary-text-color);
 }
@@ -282,10 +309,12 @@ dialog::backdrop {
   font-size: 1rem;
   margin-bottom: 5rem;
 }
+
 @media (max-width: 400px) {
   .btn {
     padding: 0.2em 0.5em;
   }
+
   .header__logo {
     font-size: 1em;
   }
