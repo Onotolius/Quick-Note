@@ -5,6 +5,8 @@ Small, responsive notes app built with **HTML + CSS + Vanilla JS**.
 You can create, edit and delete notes in a clean UI. All notes are stored in `localStorage`, so they stay after page reload. The app also supports a dark theme toggle.
 
 ---
+## Live Preview 
+https://onotolius.github.io/Quick-Note/
 
 ## Preview 
 ![Desktop](screenshots/Desktop.png)
@@ -38,12 +40,3 @@ You can create, edit and delete notes in a clean UI. All notes are stored in `lo
   - `localStorage` for persistence
   - DOM manipulation & event delegation
 
----
-
-## Getting Started
-
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
