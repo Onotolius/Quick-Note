@@ -6,12 +6,9 @@ You can create, edit and delete notes in a clean UI. All notes are stored in `lo
 
 ---
 
-## Preview
-
-_Add screenshots here:_
-
-- `screenshots/desktop.png`
-- `screenshots/mobile.png`
+## Preview 
+![Desktop](screenshots/Desktop.png)
+![Mobile](screenshots/Mobile.png)
 
 ---
 
